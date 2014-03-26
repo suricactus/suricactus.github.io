@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Транспортна задачи</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css/libs/bootstrap-2.3.1/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/libs/custom-theme/jquery-ui-1.10.1.custom.css" />
+        <link rel="stylesheet" href="css/site.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1 class="page-header" id="top">Транспортни задачи</h1>
+            </header>
+            <article>
+                <div class="row">
+                    <div class="span9">
+                        <div class="well well-large matrix-holder">
+                            <div class="matrix-container">
+                                <div class="matrix-brackets">
+                                    <table id="matrix-table"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: none;">
+                            <h2>Решение</h2>
+                            <div id="result"></div>
+                        </div>
+
+                    </div>
+                    <div class="span3">
+                        <form class="well well-large">
+                            <div class="control-group">
+                                <label class="control-label" for="numberSources">
+                                    Брой източници:
+                                    <span class="pull-right">
+                                        <input id="numberSources" value="2" class="input-mini pull-right" tabindex="1"/>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="numberPurchasers">
+                                    Брой консуматори:
+                                    <span class="pull-right">
+                                        <input id="numberPurchasers" value="2" class="input-mini" tabindex="2" />
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="control-group" style="text-align: center;">
+                                <div id="look-for">
+                                    <input type="radio" id="zmin" name="radio" value="min" checked="checked" />
+                                    <label for="zmin">
+                                        Z<sub>min</sub>
+                                    </label>
+                                    <input type="radio" id="zmax" name="radio" value="max" disabled="disabled"/>
+                                    <label for="zmax">
+                                        Z<sub>max</sub>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="button-edit" class="btn btn-block btn-info" tabindex="10001">Промени</button>
+                                <button type="button" id="button-reset" class="btn btn-block btn-danger" tabindex="10002">Изчисти</button>
+                                <button type="button" id="button-calculate" class="btn btn-block btn-large btn-primary" tabindex="10000">Сметни</button>
+                            </div>
+                        </form>
+
+                        <div  class="well well-large" style="display: none;">
+                            <ul id="navigation"></ul>
+                        </div>
+                        <div id="to-top">
+                            <a href="#top" class="btn btn-link">
+                                нагоре
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <script src="js/libs/jquery-1.9.1/jquery-1.9.1.js"></script>
+        <script src="js/libs/jquery-ui-1.10.2/jquery-ui-1.10.2.custom.js"></script>
+        <script src="js/site.js"></script>
+        <script src="js/matrix.js"></script>
+    </body>
+</html>
