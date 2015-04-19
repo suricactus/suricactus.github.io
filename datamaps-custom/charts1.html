@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Settings</title>
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap-colorpicker/css/colorpicker.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/handsontable/dist/handsontable.full.css">
+
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+
+</head>
+<body>
+	<div id="settings" class="container">
+		<form id="form" class="form-horizontal">
+			<legend>Build your own world chart map</legend>
+<!-- 		  <div class="form-group">
+		    <label for="inputTitle" class="col-sm-2 control-label">Map title</label>
+		    <div class="col-sm-10">
+		      <input type="text" name="mapTitle" class="form-control" id="inputTitle" placeholder="Map title">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputBar1Title" class="col-sm-2 control-label">Bar1 title</label>
+		    <div class="col-sm-10">
+		      <input type="text" name="bar1Title" class="form-control" id="inputBar1Title" placeholder="Bar1">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputBar2Title" class="col-sm-2 control-label">Bar2 title</label>
+		    <div class="col-sm-10">
+		      <input type="text" name="bar2Title" class="form-control" id="inputBar2Title" placeholder="Bar2" >
+		    </div>
+		  </div> -->
+		  <div class="form-group">
+		    <label for="inputBar1Color" class="col-sm-2 control-label">Bar1 color</label>
+		    <div class="col-sm-10">
+		    	<input type="text" name="bar1Color" value="#0000FF" id="inputBar1Color" class="form-control bar-colorpicker" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputBar2Color" class="col-sm-2 control-label">Bar2 color</label>
+		    <div class="col-sm-10">
+		    	<input type="text" name="bar2Color" value="#FF0000" id="inputBar2Color" class="form-control bar-colorpicker" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputBarWidth" class="col-sm-2 control-label">Bar width</label>
+		    <div class="col-sm-10">
+		    	<input type="number" name="barWidth" value="6" id="inputBarWidth" class="form-control" />
+		    </div>
+		  </div>
+  		  <div class="form-group">
+		    <label for="inputBarMaxHeight" class="col-sm-2 control-label">Bar max height</label>
+		    <div class="col-sm-10">
+		    	<input type="number" name="barMaxHeight" value="100" id="inputBarMaxHeight" class="form-control" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputBarDistance" class="col-sm-2 control-label">Bar distance</label>
+		    <div class="col-sm-10">
+		    	<input type="number" name="barDistance" value="2" id="inputBarDistance" class="form-control" />
+		    </div>
+		  </div>
+  		  <div class="form-group">
+		    <label for="inputFontSize" class="col-sm-2 control-label">Font size</label>
+		    <div class="col-sm-10">
+		    	<input type="number" name="fontSize" value="10" id="inputFontSize" class="form-control" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+
+		    <div class="col-sm-10 col-sm-offset-2">
+		  		<div id="spreadsheet"></div>
+		    </div>
+		  </div>
+
+
+
+		  <div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <button type="button" id="submit" class="btn btn-primary btn-lg">Submit</button>
+		    </div>
+		  </div>
+		  
+		</form>
+
+	</div>
+
+	<div id="chartsMap"></div>
+
+	<button type="button" id="generate" class="btn btn-danger">GENERATE</button>
+
+
+
+
+	<script src="http://d3js.org/d3.v3.js"></script>
+	<!-- // <script type="text/javascript" src="bower_components/d3/d3.min.js"></script> -->
+	<script type="text/javascript" src="bower_components/topojson/topojson.js"></script>
+	<script type="text/javascript" src="bower_components/datamaps/dist/datamaps.all.js"></script>
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+	<script type="text/javascript" src="bower_components/handsontable/dist/handsontable.full.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.bar-colorpicker').colorpicker();
+
+			var countryToIsoMap = {"American Samoa":"ASM","Botswana":"BWA","Brazil":"BRA","British Indian Ocean Territory":"IOT","Brunei Darussalam":"BRN","Bulgaria":"BGR","Burundi":"BDI","Cameroon":"CMR","Cabo Verde":"CPV","Cayman Islands":"CYM","Central African Republic":"CAF","Chad":"TCD","Chile":"CHL","China, mainland":"CHN","Christmas Island":"CXR","Cocos (Keeling) Islands":"CCK","Colombia":"COL","Comoros":"COM","Congo":"COG","Cook Islands":"COK","Costa Rica":"CRI","Cuba":"CUB","Cyprus":"CYP","Denmark":"DNK","Dominica":"DMA","Dominican Republic":"DOM","Ecuador":"ECU","Egypt":"EGY","El Salvador":"SLV","Equatorial Guinea":"GNQ","Estonia":"EST","Faroe Islands":"FRO","Falkland Islands (Malvinas)":"FLK","Fiji":"FJI","Finland":"FIN","France":"FRA","French Guiana":"GUF","French Polynesia":"PYF","French Southern and Antarctic Territories":"ATF","Djibouti":"DJI","Georgia":"GEO","Gabon":"GAB","Gambia":"GMB","Germany":"DEU","Bosnia and Herzegovina":"BIH","Ghana":"GHA","Gibraltar":"GIB","Kiribati":"KIR","Greece":"GRC","Greenland":"GRL","Grenada":"GRD","Guadeloupe":"GLP","Guam":"GUM","Guatemala":"GTM","Guinea":"GIN","Guyana":"GUY","Haiti":"HTI","Honduras":"HND","China, Hong Kong SAR":"HKG","Hungary":"HUN","Croatia":"HRV","Armenia":"ARM","Afghanistan":"AFG","Albania":"ALB","Algeria":"DZA","Andorra":"AND","Angola":"AGO","Antigua and Barbuda":"ATG","Argentina":"ARG","Australia":"AUS","Austria":"AUT","Bahamas":"BHS","Bahrain":"BHR","Barbados":"BRB","Bangladesh":"BGD","Bermuda":"BMU","Bhutan":"BTN","Bolivia (Plurinational State of)":"BOL","Aruba":"ABW","Belize":"BLZ","Antarctica":"ATA","Canada":"CAN","Azerbaijan":"AZE","Benin":"BEN","Belarus":"BLR","Iceland":"ISL","India":"IND","Indonesia":"IDN","Iran (Islamic Republic of)":"IRN","Iraq":"IRQ","Ireland":"IRL","Israel":"ISR","Italy":"ITA","Côte d'Ivoire":"CIV","Kazakhstan":"KAZ","Jamaica":"JAM","Japan":"JPN","Jordan":"JOR","Kyrgyzstan":"KGZ","Kenya":"KEN","Cambodia":"KHM","Democratic People's Republic of Korea":"PRK","Republic of Korea":"KOR","Kuwait":"KWT","Latvia":"LVA","Lao People's Democratic Republic":"LAO","Lebanon":"LBN","Lesotho":"LSO","Liberia":"LBR","Solomon Islands":"SLB","Myanmar":"MMR","Sri Lanka":"LKA","Holy See":"VAT","Libya":"LBY","Liechtenstein":"LIE","Lithuania":"LTU","Marshall Islands":"MHL","China, Macao SAR":"MAC","Madagascar":"MDG","Malawi":"MWI","Malaysia":"MYS","Maldives":"MDV","Mali":"MLI","Malta":"MLT","Martinique":"MTQ","Mauritania":"MRT","Mauritius":"MUS","Mexico":"MEX","Monaco":"MCO","Mongolia":"MNG","Montserrat":"MSR","Morocco":"MAR","Mozambique":"MOZ","Micronesia (Federated States of)":"FSM","Republic of Moldova":"MDA","Namibia":"NAM","Nauru":"NRU","Nepal":"NPL","Netherlands":"NLD","New Caledonia":"NCL","The former Yugoslav Republic of Macedonia":"MKD","Vanuatu":"VUT","New Zealand":"NZL","Nicaragua":"NIC","Niger":"NER","Nigeria":"NGA","Niue":"NIU","Norfolk Island":"NFK","Norway":"NOR","Northern Mariana Islands":"MNP","Pakistan":"PAK","Panama":"PAN","Czech Republic":"CZE","Papua New Guinea":"PNG","Paraguay":"PRY","Peru":"PER","Philippines":"PHL","Pitcairn Islands":"PCN","Poland":"POL","Portugal":"PRT","Guinea-Bissau":"GNB","Timor-Leste":"TLS","Puerto Rico":"PRI","Eritrea":"ERI","Qatar":"QAT","Palau":"PLW","Zimbabwe":"ZWE","Réunion":"REU","Romania":"ROU","Rwanda":"RWA","Russian Federation":"RUS","Saint Helena, Ascension and Tristan da Cunha":"SHN","Saint Kitts and Nevis":"KNA","Saint Lucia":"LCA","Saint Pierre and Miquelon":"SPM","Saint Vincent and the Grenadines":"VCT","San Marino":"SMR","Sao Tome and Principe":"STP","Saudi Arabia":"SAU","Senegal":"SEN","Seychelles":"SYC","Sierra Leone":"SLE","Slovenia":"SVN","Slovakia":"SVK","Singapore":"SGP","Somalia":"SOM","South Africa":"ZAF","Spain":"ESP","Western Sahara":"ESH","Sudan (former)":"SDN","Suriname":"SUR","Tajikistan":"TJK","Swaziland":"SWZ","Sweden":"SWE","Switzerland":"CHE","Syrian Arab Republic":"SYR","Turkmenistan":"TKM","China, Taiwan Province of":"TWN","United Republic of Tanzania":"TZA","Thailand":"THA","Togo":"TGO","Tokelau":"TKL","Tonga":"TON","Trinidad and Tobago":"TTO","Oman":"OMN","Tunisia":"TUN","Turkey":"TUR","Turks and Caicos Islands":"TCA","United Arab Emirates":"ARE","Uganda":"UGA","Tuvalu":"TUV","United Kingdom":"GBR","Ukraine":"UKR","United States of America":"USA","Burkina Faso":"BFA","Uruguay":"URY","Uzbekistan":"UZB","Venezuela (Bolivarian Republic of)":"VEN","Viet Nam":"VNM","Ethiopia":"ETH","British Virgin Islands":"VGB","United States Virgin Islands":"VIR","Wallis and Futuna Islands":"WLF","Samoa":"WSM","Yemen":"YEM","Democratic Republic of the Congo":"COD","Zambia":"ZMB","Belgium":"BEL","Luxembourg":"LUX","Anguilla":"AIA","Svalbard and Jan Mayen Islands":"SJM","Isle of Man":"IMN","Mayotte":"MYT","Serbia":"SRB","Montenegro":"MNE","South Sudan":"SSD"};
+			var countryCentroidsMap = {"AFG":{"center":[66.00407453666492,33.841658331964354],"name":"Afghanistan","ISOCode":"AFG"},"AGO":{"center":[17.464519488833727,-12.225147674456586],"name":"Angola","ISOCode":"AGO"},"ALB":{"center":[20.03634040517628,41.13290567628438],"name":"Albania","ISOCode":"ALB"},"ARE":{"center":[54.197201712810525,23.869575037155826],"name":"United Arab Emirates","ISOCode":"ARE"},"ARG":{"center":[-64.75551998614402,-34.73709141157074],"name":"Argentina","ISOCode":"ARG"},"ARM":{"center":[45.015818783236874,40.21025504011791],"name":"Armenia","ISOCode":"ARM"},"ATA":{"center":[82.51347845619567,-84.96784116089106],"name":"Antarctica","ISOCode":"ATA"},"ATF":{"center":[69.52581200035758,-49.30708201452687],"name":"French Southern and Antarctic Lands","ISOCode":"ATF"},"AUS":{"center":[134.31411231914615,-25.762921854176078],"name":"Australia","ISOCode":"AUS"},"AUT":{"center":[14.061754052907862,47.621661995904134],"name":"Austria","ISOCode":"AUT"},"AZE":{"center":[47.554112964765864,40.22311700119651],"name":"Azerbaijan","ISOCode":"AZE"},"BDI":{"center":[29.915250441206158,-3.382259234237961],"name":"Burundi","ISOCode":"BDI"},"BEL":{"center":[4.582863153191207,50.65363411810595],"name":"Belgium","ISOCode":"BEL"},"BEN":{"center":[2.332949060883761,9.63711696266612],"name":"Benin","ISOCode":"BEN"},"BFA":{"center":[-1.7835157938189665,12.310639477160507],"name":"Burkina Faso","ISOCode":"BFA"},"BGD":{"center":[90.2682213560899,23.830863869891264],"name":"Bangladesh","ISOCode":"BGD"},"BGR":{"center":[25.18527975186179,42.757145018657894],"name":"Bulgaria","ISOCode":"BGR"},"BHS":{"center":[-77.92160647898834,25.504697520464802],"name":"The Bahamas","ISOCode":"BHS"},"BIH":{"center":[17.824720377316755,44.177545165624124],"name":"Bosnia and Herzegovina","ISOCode":"BIH"},"BLR":{"center":[27.970695645175258,53.4953470168609],"name":"Belarus","ISOCode":"BLR"},"BLZ":{"center":[-88.70713618493528,17.189313456262642],"name":"Belize","ISOCode":"BLZ"},"BOL":{"center":[-64.65482205521754,-16.69769741962387],"name":"Bolivia","ISOCode":"BOL"},"BRA":{"center":[-53.16792803193955,-10.654243898692409],"name":"Brazil","ISOCode":"BRA"},"BRN":{"center":[114.91891020468618,4.688191686174508],"name":"Brunei","ISOCode":"BRN"},"BTN":{"center":[90.47421924258653,27.42471616938373],"name":"Bhutan","ISOCode":"BTN"},"BWA":{"center":[23.781308170437494,-22.077702848635575],"name":"Botswana","ISOCode":"BWA"},"CAF":{"center":[20.369731991541556,6.547622482717297],"name":"Central African Republic","ISOCode":"CAF"},"CAN":{"center":[-96.39990304211013,60.476519270607845],"name":"Canada","ISOCode":"CAN"},"CHE":{"center":[8.115928792572873,46.79272347665332],"name":"Switzerland","ISOCode":"CHE"},"CHL":{"center":[-71.17976388441296,-37.31892316951783],"name":"Chile","ISOCode":"CHL"},"CHN":{"center":[103.45131110396628,36.6831030513603],"name":"China","ISOCode":"CHN"},"CIV":{"center":[-5.615235088104249,7.551427815925791],"name":"Ivory Coast","ISOCode":"CIV"},"CMR":{"center":[12.607160136444415,5.656260876754826],"name":"Cameroon","ISOCode":"CMR"},"COD":{"center":[23.57441095567903,-2.838001538081035],"name":"Democratic Republic of the Congo","ISOCode":"COD"},"COG":{"center":[15.136017363490561,-0.8373658298265715],"name":"Republic of the Congo","ISOCode":"COG"},"COL":{"center":[-73.07210261627318,3.916805056173546],"name":"Colombia","ISOCode":"COL"},"CRI":{"center":[-84.17164037446689,9.96554688246942],"name":"Costa Rica","ISOCode":"CRI"},"CUB":{"center":[-78.93211008469613,21.645846961513282],"name":"Cuba","ISOCode":"CUB"},"-99":{"center":[46.241707143033416,9.762209221707023],"name":"Somaliland","ISOCode":"-99"},"CYP":{"center":[33.04111596131,34.90712444919568],"name":"Cyprus","ISOCode":"CYP"},"CZE":{"center":[15.338544461356822,49.78139311650275],"name":"Czech Republic","ISOCode":"CZE"},"DEU":{"center":[10.265959978063494,51.07760577053418],"name":"Germany","ISOCode":"DEU"},"DJI":{"center":[42.502733903352066,11.769020448782525],"name":"Djibouti","ISOCode":"DJI"},"DNK":{"center":[9.884625861395739,56.05596428238374],"name":"Denmark","ISOCode":"DNK"},"DOM":{"center":[-70.45807552429426,18.88589096480256],"name":"Dominican Republic","ISOCode":"DOM"},"DZA":{"center":[2.613073686161134,28.084414426274346],"name":"Algeria","ISOCode":"DZA"},"ECU":{"center":[-78.38380119739396,-1.455607072115905],"name":"Ecuador","ISOCode":"ECU"},"EGY":{"center":[29.863415349971564,26.472377531220708],"name":"Egypt","ISOCode":"EGY"},"ERI":{"center":[38.68672560816911,15.419535042584137],"name":"Eritrea","ISOCode":"ERI"},"ESP":{"center":[-3.62270238472921,40.31733353353806],"name":"Spain","ISOCode":"ESP"},"EST":{"center":[25.824789577937345,58.64333223221938],"name":"Estonia","ISOCode":"EST"},"ETH":{"center":[39.55915489486534,8.64468273563282],"name":"Ethiopia","ISOCode":"ETH"},"FIN":{"center":[26.143307080785572,64.26226021468665],"name":"Finland","ISOCode":"FIN"},"FJI":{"center":[178.56649309201973,-17.31807920159375],"name":"Fiji","ISOCode":"FJI"},"FLK":{"center":[-59.41449958361847,-51.71602225304388],"name":"Falkland Islands","ISOCode":"FLK"},"FRA":{"center":[2.476244536593734,46.483636982063175],"name":"France","ISOCode":"FRA"},"GUF":{"center":[-53.23804926602062,3.9061368478465845],"name":"French Guiana","ISOCode":"GUF"},"GAB":{"center":[11.691331693496103,-0.647706033161585],"name":"Gabon","ISOCode":"GAB"},"GBR":{"center":[-2.7552576376718902,53.808924485537744],"name":"United Kingdom","ISOCode":"GBR"},"GEO":{"center":[43.50209315122834,42.16547242837792],"name":"Georgia","ISOCode":"GEO"},"GHA":{"center":[-1.2392331323757113,7.923894015567942],"name":"Ghana","ISOCode":"GHA"},"GIN":{"center":[-11.057077063527062,10.447684795898615],"name":"Guinea","ISOCode":"GIN"},"GMB":{"center":[-15.439273668208996,13.473181374262504],"name":"Gambia","ISOCode":"GMB"},"GNB":{"center":[-15.113544756052441,12.023170764085283],"name":"Guinea Bissau","ISOCode":"GNB"},"GNQ":{"center":[10.373971459320748,1.6444515970843678],"name":"Equatorial Guinea","ISOCode":"GNQ"},"GRC":{"center":[22.717434934982055,39.03039399654945],"name":"Greece","ISOCode":"GRC"},"GRL":{"center":[-41.96148055541661,73.15282511218011],"name":"Greenland","ISOCode":"GRL"},"GTM":{"center":[-90.37573523959115,15.696827976296804],"name":"Guatemala","ISOCode":"GTM"},"GUY":{"center":[-58.96888288755751,4.7863344258638785],"name":"Guyana","ISOCode":"GUY"},"HND":{"center":[-86.59637251415984,14.825612199673591],"name":"Honduras","ISOCode":"HND"},"HRV":{"center":[16.55702554193384,45.01167991779514],"name":"Croatia","ISOCode":"HRV"},"HTI":{"center":[-72.66206400213467,18.900046213668066],"name":"Haiti","ISOCode":"HTI"},"HUN":{"center":[19.340616533799615,47.20324836193386],"name":"Hungary","ISOCode":"HUN"},"IDN":{"center":[117.35939112768261,-2.271384669236908],"name":"Indonesia","ISOCode":"IDN"},"IND":{"center":[79.54150916785453,22.81608490755801],"name":"India","ISOCode":"IND"},"IRL":{"center":[-8.022225457002833,53.17346562451818],"name":"Ireland","ISOCode":"IRL"},"IRN":{"center":[54.45154730430975,32.474341857477924],"name":"Iran","ISOCode":"IRN"},"IRQ":{"center":[43.78480449533653,33.005189531781504],"name":"Iraq","ISOCode":"IRQ"},"ISL":{"center":[-18.769031610383912,65.0805381602626],"name":"Iceland","ISOCode":"ISL"},"ISR":{"center":[34.99467269077944,31.483743373084106],"name":"Israel","ISOCode":"ISR"},"ITA":{"center":[12.266678929262651,42.67309857454239],"name":"Italy","ISOCode":"ITA"},"JAM":{"center":[-77.32115248046084,18.139946115985946],"name":"Jamaica","ISOCode":"JAM"},"JOR":{"center":[36.756952000651815,31.230914120541964],"name":"Jordan","ISOCode":"JOR"},"JPN":{"center":[137.71933301908726,37.54561179475325],"name":"Japan","ISOCode":"JPN"},"KAZ":{"center":[67.2403948887145,48.404654426968904],"name":"Kazakhstan","ISOCode":"KAZ"},"KEN":{"center":[37.796757771979024,0.5938341273740833],"name":"Kenya","ISOCode":"KEN"},"KGZ":{"center":[74.58432823686829,41.517212863319365],"name":"Kyrgyzstan","ISOCode":"KGZ"},"KHM":{"center":[104.87129204838816,12.686633074957761],"name":"Cambodia","ISOCode":"KHM"},"KOR":{"center":[127.8158085879393,36.418806611037446],"name":"South Korea","ISOCode":"KOR"},"KWT":{"center":[47.597307966215126,29.311278470142188],"name":"Kuwait","ISOCode":"KWT"},"LAO":{"center":[103.78629454096342,18.434705366034308],"name":"Laos","ISOCode":"LAO"},"LBN":{"center":[35.86081668259292,33.90784280515013],"name":"Lebanon","ISOCode":"LBN"},"LBR":{"center":[-9.415418811375691,6.434055859222504],"name":"Liberia","ISOCode":"LBR"},"LBY":{"center":[18.03216823599587,26.988371450867092],"name":"Libya","ISOCode":"LBY"},"LKA":{"center":[80.66800103588646,7.700624915322752],"name":"Sri Lanka","ISOCode":"LKA"},"LSO":{"center":[28.162909967293118,-29.625604447721663],"name":"Lesotho","ISOCode":"LSO"},"LTU":{"center":[23.8848963846522,55.284135384730426],"name":"Lithuania","ISOCode":"LTU"},"LUX":{"center":[5.96082153617686,49.76730458484106],"name":"Luxembourg","ISOCode":"LUX"},"LVA":{"center":[24.841481439468378,56.81823207018345],"name":"Latvia","ISOCode":"LVA"},"MAR":{"center":[-8.693787457312062,29.81423728214948],"name":"Morocco","ISOCode":"MAR"},"MDA":{"center":[28.42069922290453,47.19725344001682],"name":"Moldova","ISOCode":"MDA"},"MDG":{"center":[46.72935334934154,-19.306252093148874],"name":"Madagascar","ISOCode":"MDG"},"MEX":{"center":[-102.22201810673302,23.910212690589802],"name":"Mexico","ISOCode":"MEX"},"MKD":{"center":[21.697189435758183,41.6088893245033],"name":"Macedonia","ISOCode":"MKD"},"MLI":{"center":[-3.5944271087626785,17.23697900187473],"name":"Mali","ISOCode":"MLI"},"MMR":{"center":[96.51374519137288,20.939285696088053],"name":"Myanmar","ISOCode":"MMR"},"MNE":{"center":[19.28377869889857,42.78671220547802],"name":"Montenegro","ISOCode":"MNE"},"MNG":{"center":[103.01662842033132,46.95507696011663],"name":"Mongolia","ISOCode":"MNG"},"MOZ":{"center":[35.54252504913354,-17.154436112879512],"name":"Mozambique","ISOCode":"MOZ"},"MRT":{"center":[-10.344413913366113,20.179950142183497],"name":"Mauritania","ISOCode":"MRT"},"MWI":{"center":[34.189222267303535,-13.174250082841889],"name":"Malawi","ISOCode":"MWI"},"MYS":{"center":[109.68399613313737,3.7467471237348517],"name":"Malaysia","ISOCode":"MYS"},"NAM":{"center":[17.137762422338767,-22.039079679341373],"name":"Namibia","ISOCode":"NAM"},"NCL":{"center":[165.53134271711443,-21.260155232351913],"name":"New Caledonia","ISOCode":"NCL"},"NER":{"center":[9.27202780940703,17.338879820833785],"name":"Niger","ISOCode":"NER"},"NGA":{"center":[7.982660744695677,9.540047153991516],"name":"Nigeria","ISOCode":"NGA"},"NIC":{"center":[-85.02331103081309,12.847250118210797],"name":"Nicaragua","ISOCode":"NIC"},"NLD":{"center":[5.5009938728678875,52.29132336199355],"name":"Netherlands","ISOCode":"NLD"},"NOR":{"center":[12.835841094806327,66.65425812359142],"name":"Norway","ISOCode":"NOR"},"NPL":{"center":[84.04488408238164,28.247738341512093],"name":"Nepal","ISOCode":"NPL"},"NZL":{"center":[172.95146590964356,-41.5538273495208],"name":"New Zealand","ISOCode":"NZL"},"OMN":{"center":[56.07378921197165,20.592199290791047],"name":"Oman","ISOCode":"OMN"},"PAK":{"center":[69.23461065502967,29.90771969310168],"name":"Pakistan","ISOCode":"PAK"},"PAN":{"center":[-80.10933212344354,8.533685821623084],"name":"Panama","ISOCode":"PAN"},"PER":{"center":[-74.43234438072739,-9.14496377941646],"name":"Peru","ISOCode":"PER"},"PHL":{"center":[122.92766346116443,11.734518574327115],"name":"Philippines","ISOCode":"PHL"},"PNG":{"center":[145.3127573102897,-6.458359951406978],"name":"Papua New Guinea","ISOCode":"PNG"},"POL":{"center":[19.345524239882735,52.135190178249],"name":"Poland","ISOCode":"POL"},"PRI":{"center":[-66.4731301538435,18.23654501357098],"name":"Puerto Rico","ISOCode":"PRI"},"PRK":{"center":[127.13246955446579,40.129201104026315],"name":"North Korea","ISOCode":"PRK"},"PRT":{"center":[-8.063086788741499,39.61038573309118],"name":"Portugal","ISOCode":"PRT"},"PRY":{"center":[-58.43905175938857,-23.22740686801301],"name":"Paraguay","ISOCode":"PRY"},"QAT":{"center":[51.18403376761814,25.318814265860226],"name":"Qatar","ISOCode":"QAT"},"ROU":{"center":[24.950880115234668,45.85429183149763],"name":"Romania","ISOCode":"ROU"},"RUS":{"center":[95.94574583765026,66.07045694159952],"name":"Russia","ISOCode":"RUS"},"RWA":{"center":[29.91416127892922,-2.018578638085129],"name":"Rwanda","ISOCode":"RWA"},"ESH":{"center":[-12.187316326635145,24.278175144182246],"name":"Western Sahara","ISOCode":"ESH"},"SAU":{"center":[44.64164143279274,24.08941078679801],"name":"Saudi Arabia","ISOCode":"SAU"},"SDN":{"center":[29.831327215845477,15.969343443982835],"name":"Sudan","ISOCode":"SDN"},"SSD":{"center":[30.201033399426116,7.2951182888599755],"name":"South Sudan","ISOCode":"SSD"},"SEN":{"center":[-14.503529159293334,14.35291542479862],"name":"Senegal","ISOCode":"SEN"},"SLB":{"center":[159.94722397543737,-8.837763785895023],"name":"Solomon Islands","ISOCode":"SLB"},"SLE":{"center":[-11.796199172950072,8.52940312592388],"name":"Sierra Leone","ISOCode":"SLE"},"SLV":{"center":[-88.87789539044394,13.727659817828611],"name":"El Salvador","ISOCode":"SLV"},"SOM":{"center":[45.69985967350704,4.740846167349662],"name":"Somalia","ISOCode":"SOM"},"SRB":{"center":[20.831792633062012,44.22476079676624],"name":"Republic of Serbia","ISOCode":"SRB"},"SUR":{"center":[-55.91347523027396,4.119611697445329],"name":"Suriname","ISOCode":"SUR"},"SVK":{"center":[19.495539942869325,48.731974540502705],"name":"Slovakia","ISOCode":"SVK"},"SVN":{"center":[14.934855514932728,46.12718373612532],"name":"Slovenia","ISOCode":"SVN"},"SWE":{"center":[16.109594021515864,62.41847836565466],"name":"Sweden","ISOCode":"SWE"},"SWZ":{"center":[31.399739133921265,-26.48593261138959],"name":"Swaziland","ISOCode":"SWZ"},"SYR":{"center":[38.52111913379102,35.007756413425874],"name":"Syria","ISOCode":"SYR"},"TCD":{"center":[18.574489946112973,15.274047656593606],"name":"Chad","ISOCode":"TCD"},"TGO":{"center":[0.9959736299624644,8.433110993480705],"name":"Togo","ISOCode":"TGO"},"THA":{"center":[101.00343823248222,14.988303006213885],"name":"Thailand","ISOCode":"THA"},"TJK":{"center":[71.0475264100648,38.5886660904194],"name":"Tajikistan","ISOCode":"TJK"},"TKM":{"center":[59.3513385543978,39.0999504508572],"name":"Turkmenistan","ISOCode":"TKM"},"TLS":{"center":[125.97289825468802,-8.768033413688896],"name":"East Timor","ISOCode":"TLS"},"TTO":{"center":[-61.333001404615,10.429462829618595],"name":"Trinidad and Tobago","ISOCode":"TTO"},"TUN":{"center":[9.537913612158212,34.147052470695115],"name":"Tunisia","ISOCode":"TUN"},"TUR":{"center":[35.11460442537666,39.1444686022956],"name":"Turkey","ISOCode":"TUR"},"TWN":{"center":[120.97154836194701,23.74056858303172],"name":"Taiwan","ISOCode":"TWN"},"TZA":{"center":[34.73899593771913,-6.247303117815418],"name":"United Republic of Tanzania","ISOCode":"TZA"},"UGA":{"center":[32.357311972031425,1.2954245389949368],"name":"Uganda","ISOCode":"UGA"},"UKR":{"center":[31.450491578449093,48.99670189301436],"name":"Ukraine","ISOCode":"UKR"},"URY":{"center":[-56.003943302243925,-32.77366112316897],"name":"Uruguay","ISOCode":"URY"},"USA":{"center":[-103.5728677066649,44.75500401999344],"name":"United States of America","ISOCode":"USA"},"UZB":{"center":[63.36096454249883,41.77424436900513],"name":"Uzbekistan","ISOCode":"UZB"},"VEN":{"center":[-66.15388723238524,7.162924543148977],"name":"Venezuela","ISOCode":"VEN"},"VNM":{"center":[106.33540398168118,16.552983666038102],"name":"Vietnam","ISOCode":"VNM"},"VUT":{"center":[167.06879639005427,-15.541377471764733],"name":"Vanuatu","ISOCode":"VUT"},"PSE":{"center":[35.281212952671325,31.939604053295202],"name":"West Bank","ISOCode":"PSE"},"YEM":{"center":[47.51759600819366,15.921830138457855],"name":"Yemen","ISOCode":"YEM"},"ZAF":{"center":[25.14897612296122,-28.92252473200261],"name":"South Africa","ISOCode":"ZAF"},"ZMB":{"center":[27.761225082811414,-13.394063937826479],"name":"Zambia","ISOCode":"ZMB"},"ZWE":{"center":[29.787093694032087,-18.90126092887769],"name":"Zimbabwe","ISOCode":"ZWE"}};
+			
+
+            var handsontable = new Handsontable(document.querySelector('#spreadsheet'), {
+                colHeaders: ['Rank', 'Area', 'Bar 1', 'Flag', 'Bar 2', 'Flag'],
+                contextMenu: true,
+                stretchH: 'all',
+            });
+
+
+            $('#submit').click(function(event) {
+                var data = handsontable.getData();
+                var settingsArray = $('#form').serializeArray();
+                var settings = {};
+                var filteredData = [];
+
+                settingsArray.forEach(function(setting) {
+                    settings[setting.name] = setting.value;
+                });
+
+                settings.dataMaxBarValue = [data[0][2], data[0][4]];
+
+                data.forEach(function(row) {
+                    var ISOCode = countryToIsoMap[row[1]];
+                    var obj = $.extend({
+                            values: [],
+                            ISOCode: ISOCode,
+                        }, countryCentroidsMap[ISOCode]);
+
+                    if (!ISOCode) {
+                        alert('Invalid area name "' + obj.ISOCode + '", should be part of predefined list');
+                        return;
+                    }
+
+                    obj.values.push(row[2]);
+                    obj.values.push(row[4]);
+
+                    filteredData.push(obj);
+                });
+
+
+                map.scCharts(filteredData, settings);
+
+
+                $('#settings').hide();
+                $('#chartsMap').show();
+                $('#generate').show();
+            });
+
+            // $(document).keyup(function(event) {
+            //     if (event.keyCode == 27) { // escape thing
+            //         $('#settings').show();
+            //         $('#chartsMap').hide();
+	                // $('#generate').hide();
+            //     }
+            // });
+			d3.select("#generate")
+			    .on("click", writeDownloadLink);
+
+			function writeDownloadLink(event){
+			    var html = d3.select("svg")
+			        .attr("title", "test2")
+			        .attr("version", 1.1)
+			        .attr("xmlns", "http://www.w3.org/2000/svg")
+			        .node().parentNode.innerHTML;
+		        var base64 = btoa(html);
+		        console.log(arguments)
+
+			    d3.select("body").append("div")
+			        .attr("id", "download")
+			        .style("top", 50+"px")
+			        .style("left", 50+"px")
+			        .html("Right-click on this preview and choose Save as<br />Left-Click to dismiss<br />")
+			        .append("img")
+			        .attr("src", "data:image/svg+xml;base64,"+ base64);
+
+			    d3.select("#download")
+			        .on("click", function(){
+		                d3.select(this).transition()
+		                    .style("opacity", 0)
+		                    .remove();
+			        })
+			        .transition()
+			        .duration(500)
+			        .style("opacity", 1);
+			}
+
+
+            var map = new Datamap({
+                scope: 'world',
+                element: document.querySelector('#chartsMap'),
+                geographyConfig: {
+                	popupOnHover: false,
+                },
+                bubblesConfig: {
+                	popupOnHover: false,
+                }
+            });
+
+            $('#chartsMap').hide();
+
+            map.addPlugin('scCharts', function(layer, data, options) {
+                var self = this;
+
+                var charts = layer
+                    .selectAll('*')
+                    .data(data, JSON.stringify);
+
+
+                var calcHeight = function(value, max) {
+                	return value / max * +(options.barMaxHeight);
+                };
+
+  
+                var numCols = 2;
+                for(var i = 0; i < numCols; i++) {
+	                charts
+	                    .enter()
+	                    .append('rect')
+	                    .attr('class', 'scCharts')
+	                    .attr('x', function(datum) {
+	                        return self.latLngToXY(datum.center[1], datum.center[0])[0] - numCols / 2 * +(options.barWidth) - numCols * +(options.barDistance) 
+	                        + (+(options.barWidth) * i) + ((+(options.barDistance) / 2) * i);
+	                    })
+	                    .attr('y', function(datum) {
+	                        return self.latLngToXY(datum.center[1], datum.center[0])[1] - calcHeight(datum.values[ i ], +(options.dataMaxBarValue[ i ]));
+	                    })
+	                    .attr('width', +(options.barWidth))
+	                    .attr('height', function(datum) {
+							return calcHeight(datum.values[ i ], +(options.dataMaxBarValue[ i ]));
+	                    })
+	                    .style('fill', options['bar' + (i + 1) + 'Color']);
+                }
+
+                charts
+                    .enter()
+                    .append('text')
+                    .attr('class', 'scCharts')                    
+                    .attr("x", function(datum) {
+                        return self.latLngToXY(datum.center[1], datum.center[0])[0];
+                    })
+                    .attr("y", function(datum) {
+                        return self.latLngToXY(datum.center[1], datum.center[0])[1] + +(options.barDistance) + +(options.fontSize);
+                    })
+                    .text(function(datum) {
+                        return datum.ISOCode;
+                    })
+                    .attr('font-size', +(options.fontSize))
+                    .attr('text-anchor', 'middle');
+				
+            });
+
+
+
+		});
+	</script>		
+</body>
+</html>

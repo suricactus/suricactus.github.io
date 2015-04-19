@@ -1,0 +1,24 @@
+html, body { 
+	height:100%; 
+}
+
+#chartsMap {
+	/*display: none;*/
+	height: 100%;
+	width: 100%;
+}
+
+#generate {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: none;
+}
+
+#download{
+    border: 1px solid silver;
+    position: absolute;
+    opacity: 0;
+	background: #333;
+	color: white;
+}
