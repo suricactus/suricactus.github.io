@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Danube bridge data</title>
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.css">
+
+	<style>
+		#chart, #chart svg {
+			width: 100%;
+			height: 500px;
+		}
+	</style>
+
+	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+	<!-- // <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.js"></script>
+
+</head>
+<body>
+	<div class="container">		
+		<h1>Vidin-Calafat Danube bridge traffic</h1>
+		<form>
+			<div class="form-horizontal">
+				
+
+				<div id="period" class="form-group">
+					<label class="col-sm-2">Period</label>
+					<div class="col-sm-10">
+							<label>
+								<input type="radio" name="period" autocomplete="off" value="week" checked> Week
+							</label>
+							<label>
+								<input type="radio" name="period" autocomplete="off" value="month"> Month
+							</label>
+							<label>
+								<input type="radio" name="period" autocomplete="off" value="quarter"> Quarter
+							</label>
+							<label>
+								<input type="radio" name="period" autocomplete="off" value="year"> Year
+							</label>
+					</div>
+				</div>
+				
+
+			</div>
+		</form>
+
+		<div id="chart">
+			<svg></svg>
+		</div>
+
+	</div>
+	<script>
+	$(function() {
+		var weekStats = [];
+		var monthStats = {};
+
+
+		var periodMap = {
+			week: function() {
+				var countStats = {
+					key: 'Total cars per week',
+					bar: true,
+					values: [],
+				};
+				var averageStats = {
+					key: 'Average cars per day',
+					values: [],
+				};
+
+
+				weekStats.forEach(function(r) {
+					var timestamp = r.dateSince.getTime();
+
+					countStats.values.push([timestamp, r.count]);
+					averageStats.values.push([timestamp, r.countAverage]);
+				});
+
+				return [countStats, averageStats];
+			},
+			month: function() {
+				var countStats = {
+					key: 'Total cars per month',
+					bar: true,
+					values: [],
+				};
+				var averageStats = {
+					key: 'Average cars per day',
+					values: [],
+				};
+
+
+				for(var k in monthStats) {
+					var date = new Date( k + '-01' );
+					var timestamp = date.getTime();
+					var days = daysInMonth(new Date(timestamp));
+
+					if(date.setMonth(date.getMonth() + 1) >= new Date().getTime()) {
+						days = (new Date() - date) / (1000 * 60 * 60 * 24);
+					}
+
+					countStats.values.push([timestamp, monthStats[k] ])
+					averageStats.values.push([timestamp, monthStats[k] / days ])
+				}
+
+
+				return [countStats, averageStats];
+			},
+			quarter: function() {
+				var countStats = {
+					key: 'Total cars per quarter',
+					bar: true,
+					values: [],
+				};
+				var averageStats = {
+					key: 'Average cars per day',
+					values: [],
+				};
+				var quarterStats = {};
+				var quarterDays = {};
+
+				for(var k in monthStats) {
+					var dateSplit = k.split('-');
+					var year = dateSplit[0];
+					var month = dateSplit[1];
+					var quarter = Math.floor((month - 1) / 3);
+					var quarterMonth = quarter * 3 + 1;
+
+					quarterDays[year + '-' + quarterMonth + '-01'] = quarterDays[year + '-' + quarterMonth + '-01'] || 0;
+					quarterDays[year + '-' + quarterMonth + '-01'] += daysInMonth(new Date(k + '-01'));
+
+					quarterStats[year + '-' + quarterMonth + '-01'] = quarterStats[year] || 0;
+					quarterStats[year + '-' + quarterMonth + '-01'] += monthStats[k];
+				}
+
+
+				for(var quarter in quarterStats) {
+					var timestamp = new Date(quarter).getTime();
+
+					countStats.values.push([timestamp, quarterStats[quarter]]);
+					averageStats.values.push([timestamp, quarterStats[quarter] / quarterDays[quarter]]);
+				}
+
+				console.log(countStats, averageStats)
+
+				return [countStats, averageStats];
+			},
+			year: function() {
+				var countStats = {
+					key: 'Total cars per year',
+					bar: true,
+					values: [],
+				};
+				var averageStats = {
+					key: 'Average cars per day',
+					values: [],
+				};
+				var yearStats = [];
+
+
+				for(var k in monthStats) {
+					var dateSplit = k.split('-');
+					var year = dateSplit[0];
+					console.log(k, year, monthStats[k])
+
+					yearStats[year] = yearStats[year] || 0;
+					yearStats[year] += monthStats[k];
+				}
+
+
+				for(var year in yearStats) {
+					var timestamp = new Date( year + '-01-01' ).getTime();
+
+					countStats.values.push([timestamp, yearStats[year]]);
+					averageStats.values.push([timestamp, year / ((isLeapYear(year)) ? 365 : 366)]);
+				}
+
+				return [countStats, averageStats];
+			},
+		}; 
+		var daysInMonth = function (date) {
+			return new Date(date.getFullYear(), date.getMonth() +1, 0).getDate();
+		};
+		var daysInMonths = function(startDate, endDate) {
+
+		}
+		var isLeapYear = function (year) {
+		  return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+		}
+		var normalizeMonth = function(monthIndex) {
+			monthIndex += 1;			
+			monthIndex = ((monthIndex < 10) ? '0' : '') + monthIndex;
+			return monthIndex;
+		}
+
+
+		d3.csv("VidinCalafatBridgeStats.csv")
+			.row(function(d) {
+				if(!d.count) {
+					return;
+				}
+
+				return d;
+			})
+			.get(function(err, rows) {
+				if(err) {
+					alert(err);
+				}
+
+				rows.forEach(function(r) {
+					r.dateSince = new Date(r.since);
+					r.dateUntil = new Date(r.until);
+					r.count = +(r.count);
+					r.periodLengthInDays = (r.dateUntil - r.dateSince) / (1000 * 60 * 60 * 24) + 1;
+					r.countAverage = r.count / r.periodLengthInDays;
+					r.monthKeySince = r.dateSince.getFullYear() + '-' + normalizeMonth(r.dateSince.getMonth());
+					r.monthKeyUntil = r.dateUntil.getFullYear() + '-' + normalizeMonth(r.dateUntil.getMonth());
+
+
+					monthStats[ r.monthKeySince ] = monthStats[ r.monthKeySince ] || 0;
+					monthStats[ r.monthKeyUntil ] = monthStats[ r.monthKeyUntil ] || 0;
+					
+
+					if(r.monthKeySince == r.monthKeyUntil) {
+						monthStats[ r.monthKeySince ] += r.count;
+					} else {
+						var daysInCurrentMonth = daysInMonth(r.dateSince) - r.dateSince.getDate() + 1; 
+						var daysInNextMonth = r.periodLengthInDays - daysInCurrentMonth;
+
+						monthStats[ r.monthKeySince ] += Math.round(daysInCurrentMonth * r.countAverage);
+						monthStats[ r.monthKeyUntil ] += Math.round(daysInNextMonth * r.countAverage);
+					}
+
+
+					weekStats.push(r);
+				});
+
+				showChart(periodMap.week())
+			});
+		
+		d3.selectAll('#period input')
+			.on('change', function() {
+				if(!periodMap.hasOwnProperty(this.value)) {
+					var msg = 'Unknown period: ' + this.value;
+					alert(msg);
+					throw new Error(msg);
+					return;
+				}
+
+				var data = periodMap[ this.value ]();
+				showChart(data);
+			});
+
+		var showChart = function(data) {
+			console.log(data);
+
+
+			var testdata = data.map(function(series) {
+				series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
+				return series;
+			});
+
+			var chart;
+			nv.addGraph(function() {
+					chart = nv.models.linePlusBarChart()
+							.margin({top: 50, right: 60, bottom: 30, left: 70})
+							.color(d3.scale.category10().range());
+					chart.xAxis.tickFormat(function(d) {
+									return d3.time.format('%x')(new Date(d))
+							})
+							.showMaxMin(false);
+					chart.y1Axis.tickFormat(function(d) { return d3.format('f')(d) });
+					chart.bars.forceY([0]).padData(false);
+					chart.x2Axis.tickFormat(function(d) {
+							return d3.time.format('%x')(new Date(d))
+					}).showMaxMin(false);
+					d3.select('#chart svg > *')
+							.remove();
+					d3.select('#chart svg')
+							.datum(testdata)
+							.transition().duration(500).call(chart);
+					nv.utils.windowResize(chart.update);
+					chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+					return chart;
+			});
+		};
+	});
+
+
+	</script>
+</body>
+</html>
