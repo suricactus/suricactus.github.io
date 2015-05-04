@@ -50,6 +50,8 @@
 		<div id="chart">
 			<svg></svg>
 		</div>
+		<div id="table">
+		</div>
 
 	</div>
 	<script>
@@ -75,7 +77,7 @@
 					var timestamp = r.dateSince.getTime();
 
 					countStats.values.push([timestamp, r.count]);
-					averageStats.values.push([timestamp, r.countAverage]);
+					averageStats.values.push([timestamp, Math.round(r.countAverage)]);
 				});
 
 				return [countStats, averageStats];
@@ -102,7 +104,7 @@
 					}
 
 					countStats.values.push([timestamp, monthStats[k] ])
-					averageStats.values.push([timestamp, monthStats[k] / days ])
+					averageStats.values.push([timestamp, Math.round(monthStats[k] / days) ])
 				}
 
 
@@ -127,20 +129,22 @@
 					var month = dateSplit[1];
 					var quarter = Math.floor((month - 1) / 3);
 					var quarterMonth = quarter * 3 + 1;
+					var key = year + '-' + quarterMonth + '-01';
 
-					quarterDays[year + '-' + quarterMonth + '-01'] = quarterDays[year + '-' + quarterMonth + '-01'] || 0;
-					quarterDays[year + '-' + quarterMonth + '-01'] += daysInMonth(new Date(k + '-01'));
+					quarterDays[key] = quarterDays[key] || 0;
+					quarterDays[key] += daysInMonth(new Date(k + '-01'));
 
-					quarterStats[year + '-' + quarterMonth + '-01'] = quarterStats[year] || 0;
-					quarterStats[year + '-' + quarterMonth + '-01'] += monthStats[k];
+					quarterStats[key] = quarterStats[key] || 0;
+					quarterStats[key] += monthStats[k];
 				}
+
 
 
 				for(var quarter in quarterStats) {
 					var timestamp = new Date(quarter).getTime();
 
 					countStats.values.push([timestamp, quarterStats[quarter]]);
-					averageStats.values.push([timestamp, quarterStats[quarter] / quarterDays[quarter]]);
+					averageStats.values.push([timestamp, Math.round(quarterStats[quarter] / quarterDays[quarter])]);
 				}
 
 				console.log(countStats, averageStats)
@@ -174,7 +178,7 @@
 					var timestamp = new Date( year + '-01-01' ).getTime();
 
 					countStats.values.push([timestamp, yearStats[year]]);
-					averageStats.values.push([timestamp, year / ((isLeapYear(year)) ? 365 : 366)]);
+					averageStats.values.push([timestamp, Math.round(yearStats[year] / ((isLeapYear(year)) ? 365 : 366))]);
 				}
 
 				return [countStats, averageStats];
@@ -183,17 +187,14 @@
 		var daysInMonth = function (date) {
 			return new Date(date.getFullYear(), date.getMonth() +1, 0).getDate();
 		};
-		var daysInMonths = function(startDate, endDate) {
-
-		}
 		var isLeapYear = function (year) {
 		  return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
-		}
+		};
 		var normalizeMonth = function(monthIndex) {
 			monthIndex += 1;			
 			monthIndex = ((monthIndex < 10) ? '0' : '') + monthIndex;
 			return monthIndex;
-		}
+		};
 
 
 		d3.csv("VidinCalafatBridgeStats.csv")
@@ -237,7 +238,7 @@
 					weekStats.push(r);
 				});
 
-				showChart(periodMap.week())
+				showData(periodMap.week())
 			});
 		
 		d3.selectAll('#period input')
@@ -250,13 +251,79 @@
 				}
 
 				var data = periodMap[ this.value ]();
-				showChart(data);
+				console.log(data);
+
+				showData(data);
 			});
 
+		var showData = function(data) {
+			showChart(data);
+			showTable(data);
+		};
+
+		var showTable = function(data) {
+			var container = d3.select('#table');
+			var tableHeaders = ['Date'];
+			var tableData = [];
+
+			data.forEach(function(r) {
+				tableHeaders.push(r.key);
+
+				for(var i = 0, l = r.values.length; i < l; i++) {
+					if(!tableData[i]) {
+						var date = new Date(r.values[i].x);
+
+						tableData[i] = [new Intl.DateTimeFormat().format(date), r.values[i].y];
+					} else {
+						tableData[i].push(r.values[i].y)
+					}
+				}
+			});
+
+
+			container.selectAll('*')
+				.remove();
+
+
+			var table = container
+				.append('table')
+				.attr('class', 'table table-condensed table-striped');		
+			var thead = table
+				.append('thead');
+			var tbody = table
+				.append('tbody');
+
+			thead
+				.append('tr')
+				.selectAll('th')
+				.data(tableHeaders)
+				.enter()
+				.append('th')
+				.text(function(r) {
+					return r; 
+				});
+
+			var rows = tbody
+				.selectAll('tr')
+				.data(tableData)
+				.enter()
+				.append('tr');
+
+			var cells = rows
+				.selectAll('td')
+				.data(function(row) {
+					return row;
+				})
+				.enter()
+				.append('td')
+				.text(function(r) {
+					return r;
+				})
+
+
+
+		};
 		var showChart = function(data) {
-			console.log(data);
-
-
 			var testdata = data.map(function(series) {
 				series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
 				return series;
